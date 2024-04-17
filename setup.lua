@@ -1,7 +1,5 @@
 outputdir = "%{cfg.buildcfg}-%{cfg.architecture}"
 
-include "vendor/IMAF/IMAF"
-
 workspace "ImageExtract"
 	architecture "x64"
 	configurations {"Debug","Release"}
@@ -21,8 +19,10 @@ workspace "ImageExtract"
       optimize "On"
       symbols "Off"
 
+include "vendor/IMAF/IMAF"
+
 project "ImageExtract"
-	kind "windows"
+	kind "WindowedApp"
 	language "C++"
 	cppdialect "C++20"
 	staticruntime "off"
