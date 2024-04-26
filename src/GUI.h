@@ -1,5 +1,6 @@
 #pragma once
 #include "IMAF/Panel.h"
+#include "VideoProc.h"
 
 class GUI : public IMAF::Panel
 {
@@ -19,5 +20,7 @@ private:
 	float m_img_intervals = 1.f;
 
 	bool m_finished = false;
+
+	VideoProc m_video_proc;
 };
 

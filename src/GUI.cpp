@@ -12,12 +12,13 @@ GUI::GUI()
 
 void GUI::UiRender()
 {
+	ImGui::ShowDemoWindow();
 	const ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(viewport->Pos, ImGuiCond_Once);
 	ImGui::SetNextWindowSize(viewport->Size, ImGuiCond_Once);
 
 	IMAF::Begin("window", NULL, { 0 | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar });
-
+	
 	ImVec2 window_size = ImGui::GetWindowSize();
 
 	if (ImGui::BeginMenuBar())
@@ -51,13 +52,13 @@ void GUI::UiRender()
 	ImGui::InputTextWithHint("##", "Enter video folder path", (char*)m_video_path.c_str(), m_video_path.capacity() + 1);
 
 	ImGui::SameLine();
-	if (ImGui::Button("Browse", { 100,0 }))
+	if (ImGui::Button("Browse"))
 		m_video_path = Helper::WStrToStr(Helper::SelectFolder(true));
 
-	ImGui::InputTextWithHint("##", "Enter output path", (char*)m_output_path.c_str(), m_output_path.capacity() + 1);
+	ImGui::InputTextWithHint("###", "Enter output path", (char*)m_output_path.c_str(), m_output_path.capacity() + 1);
 
 	ImGui::SameLine();
-	if (ImGui::Button("Browse##", { 100,0 }))
+	if (ImGui::Button("Browse##"))
 		m_output_path = Helper::WStrToStr(Helper::SelectFolder(false));
 
 	if (m_img_intervals < 0)
@@ -80,7 +81,7 @@ void GUI::UiRender()
 	button_size.y = ImGui::CalcTextSize("Start").y + 50;
 
 	// Center on th X axis, and place it at the bottom of the window with 2% padding
-	ImGui::SetCursorPos({ (window_size.x - button_size.x) / 2.f, (window_size.y - button_size.y) - window_size.y * 0.02f });
+	ImGui::SetCursorPos({ (window_size.x - button_size.x) / 2.f, (window_size.y - button_size.y) - window_size.y * 0.05f });
 
 	if (!clicked)
 	{
@@ -94,11 +95,7 @@ void GUI::UiRender()
 				error = true;
 
 			if (m_output_path.empty())
-			{
 				m_output_path = ".\\output\\";
-				if (!std::filesystem::exists(m_output_path))
-					std::filesystem::create_directories(m_output_path);
-			}
 
 			//if (face_detection)
 			//{
@@ -117,7 +114,7 @@ void GUI::UiRender()
 				if (face_detection)
 					MessageBoxA(NULL,"Processing Video (Face Detection Enabled)", "Processing", MB_OK | MB_ICONINFORMATION);
 				else
-					MessageBoxA(NULL, "Processing Video", "Processing", MB_OK | MB_ICONINFORMATION);
+					m_video_proc.ProcessVideos(m_video_path, m_output_path, m_img_intervals);
 			}
 			else
 				clicked = false;
@@ -127,11 +124,13 @@ void GUI::UiRender()
 	{
 		static float progress = 0.0f;
 
-		//double currs = GetCurrentSteps();
-		//double total = GetTotalSteps();
-		//double fraction = currs / total;
+		float currs = m_video_proc.GetCurrentSteps();
+		float total = m_video_proc.GetTotalSteps();
 
-		//progress = fraction;
+		if (currs == 0 || total == 0)
+			progress = 0.0f;
+		else
+			progress = currs / total;
 
 		ImGui::ProgressBar(progress, ImVec2{ button_size.x,0 });
 
