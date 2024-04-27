@@ -19,7 +19,7 @@ public:
 private:
 
 	void RunProc(std::filesystem::path video_path, std::filesystem::path output_path, float image_intervals);
-	void FindVideos();
+	bool FindVideos();
 
 	std::filesystem::path m_video_path;
 	std::filesystem::path m_output_path;

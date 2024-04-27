@@ -33,7 +33,7 @@ project "ImageExtract"
 	includedirs {
 		"vendor/IMAF/IMAF/src",
 		"src/",
-		"vendor/imgui",
+		"vendor/IMAF/vendor/imgui",
 		"vendor/opencv/include"
 	}
 
@@ -41,6 +41,10 @@ project "ImageExtract"
 		"src/**.cpp",
 		"src/**.h",
 		"src/**.c"
+	}
+
+	links {
+		"IMAF"
 	}
 
 	filter "configurations:Debug"
@@ -104,7 +108,3 @@ project "ImageExtract"
 				"turbojpeg.lib",
 				"zlib.lib"
       }
-
-	links {
-		"IMAF"
-	}

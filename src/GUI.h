@@ -6,8 +6,6 @@ class GUI : public IMAF::Panel
 {
 public:
 
-	GUI();
-
 	void UiRender() override;
 
 private:

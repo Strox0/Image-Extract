@@ -1,14 +1,9 @@
 #include "GUI.h"
 #include <IMAF/Application.h>
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include "Helper.h"
 #include <filesystem>
-
-GUI::GUI()
-{
-	m_output_path.resize(_MAX_PATH);
-	m_video_path.resize(_MAX_PATH);
-}
 
 void GUI::UiRender()
 {
@@ -49,13 +44,13 @@ void GUI::UiRender()
 		ImGui::EndMenuBar();
 	}
 
-	ImGui::InputTextWithHint("##", "Enter video folder path", (char*)m_video_path.c_str(), m_video_path.capacity() + 1);
+	ImGui::InputTextWithHint("##", "Enter video folder path", &m_video_path);
 
 	ImGui::SameLine();
 	if (ImGui::Button("Browse"))
 		m_video_path = Helper::WStrToStr(Helper::SelectFolder(true));
 
-	ImGui::InputTextWithHint("###", "Enter output path", (char*)m_output_path.c_str(), m_output_path.capacity() + 1);
+	ImGui::InputTextWithHint("###", "Enter output path", &m_output_path);
 
 	ImGui::SameLine();
 	if (ImGui::Button("Browse##"))
@@ -90,7 +85,6 @@ void GUI::UiRender()
 			clicked = true;
 			bool error = false;
 
-			m_video_path.push_back('\\');
 			if (m_video_path.empty() || !std::filesystem::exists(m_video_path))
 				error = true;
 
